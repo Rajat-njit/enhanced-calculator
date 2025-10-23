@@ -41,3 +41,41 @@ def test_divide_normal():
 def test_divide_by_zero_raises():
     with pytest.raises(OperationError):
         Divide()(1, 0)
+
+from app.operations import (
+    Power, Root, Modulus, IntDivide, Percent, AbsDiff
+)
+
+def test_power():
+    assert Power()(2, 3) == 8
+    assert Power()(-2, 3) == -8
+
+def test_root_basic():
+    assert Root()(9, 2) == 3
+    assert Root()(27, 3) == 3
+
+def test_root_even_of_negative_raises():
+    from app.exceptions import OperationError
+    with pytest.raises(OperationError):
+        Root()(-9, 2)
+
+def test_modulus():
+    assert Modulus()(10, 3) == 1
+    with pytest.raises(OperationError):
+        Modulus()(1, 0)
+
+def test_int_divide_truncates_toward_zero():
+    assert IntDivide()(7, 3) == 2.0   # 2.333 -> 2
+    assert IntDivide()(-7, 3) == -2.0 # -2.333 -> -2
+    assert IntDivide()(7, -3) == -2.0
+    with pytest.raises(OperationError):
+        IntDivide()(1, 0)
+
+def test_percent():
+    assert Percent()(50, 200) == 25.0
+    with pytest.raises(OperationError):
+        Percent()(1, 0)
+
+def test_abs_diff():
+    assert AbsDiff()(10, 3) == 7
+    assert AbsDiff()(-3, 5) == 8
