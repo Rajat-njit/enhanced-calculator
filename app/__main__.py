@@ -5,6 +5,7 @@ from app.calculator import Calculator
 from app.history import History
 from app.calculator_memento import Caretaker
 from app.exceptions import ValidationError, OperationError, HistoryError
+from app.logger import configure_logger_from_config, LoggingObserver, AutoSaveObserver
 
 
 COMMANDS = {
@@ -46,6 +47,12 @@ def parse_numbers(args):
 
 def main():
     calc = Calculator(History(), Caretaker())
+
+    # attach observers
+    logger = configure_logger_from_config(calc.config)
+    calc.register_observer(LoggingObserver(logger))
+    if calc.config.auto_save:
+        calc.register_observer(AutoSaveObserver(calc.config))
 
     print("\n=== 🧮 Enhanced Calculator ===")
     print("Type 'help' to see available commands.")
