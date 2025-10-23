@@ -6,9 +6,12 @@ Stores and manages Calculation records with optional size limits.
 from __future__ import annotations
 from typing import List
 from dataclasses import dataclass
+import pandas as pd
 from .calculation import Calculation
 from .exceptions import HistoryError
 from .calculator_memento import Caretaker, CalculatorMemento
+
+
 
 
 @dataclass
@@ -128,9 +131,10 @@ class History:
                 )
             self._items = new_items
             # refresh caretaker state if present
-            if self._caretaker:
+            if hasattr(self, "_caretaker") and self._caretaker:
                 self._caretaker.clear()
                 self.record_state()
+                
         except FileNotFoundError:
             raise HistoryError(f"History file '{file_path}' not found.")
         except Exception as e:
