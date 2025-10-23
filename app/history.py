@@ -8,6 +8,7 @@ from typing import List
 from dataclasses import dataclass
 from .calculation import Calculation
 from .exceptions import HistoryError
+from .calculator_memento import Caretaker, CalculatorMemento
 
 
 @dataclass
@@ -61,3 +62,30 @@ class History:
 
     def __iter__(self):
         yield from self._items
+
+    def attach_caretaker(self, caretaker: Caretaker) -> None:
+        """Link a caretaker to save/restore history states."""
+        self._caretaker = caretaker
+        # capture initial empty state
+        caretaker.save(CalculatorMemento.from_history(self._items))
+
+    def record_state(self) -> None:
+        """Store the current state snapshot in caretaker."""
+        if hasattr(self, "_caretaker"):
+            self._caretaker.save(CalculatorMemento.from_history(self._items))
+
+    def undo(self) -> None:
+        """Revert to previous state."""
+        if not hasattr(self, "_caretaker"):
+            raise HistoryError("Caretaker not attached.")
+        new_state = self._caretaker.undo(self._items)
+        self._items = new_state or []
+        self._pointer = len(self._items) - 1
+
+    def redo(self) -> None:
+        """Reapply an undone state."""
+        if not hasattr(self, "_caretaker"):
+            raise HistoryError("Caretaker not attached.")
+        new_state = self._caretaker.redo(self._items)
+        self._items = new_state or []
+        self._pointer = len(self._items) - 1
