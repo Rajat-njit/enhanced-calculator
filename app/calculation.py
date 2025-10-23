@@ -10,41 +10,30 @@ from .exceptions import ValidationError, OperationError
 from .calculator_config import CalculatorConfig
 
 
-@dataclass(frozen=True)
-class Calculation:
-    """Immutable record of a single calculator operation."""
-    operation: str
-    a: float
-    b: float
-    result: float
-    timestamp: datetime
+@staticmethod
+def create(operation_name: str, a, b, config: CalculatorConfig) -> "Calculation":
+    try:
+        # Run validations (returns numeric floats)
+        a_num, b_num = validate_inputs(operation_name, a, b, config.max_input_value)
 
-    @staticmethod
-    def create(operation_name: str, a, b, config: CalculatorConfig) -> "Calculation":
-        """Validate, execute, and build a Calculation instance."""
-        try:
-            # Run composite validation (Phase 2.1 rules)
-            validate_inputs(operation_name, a, b, config.max_input_value)
+        operation_instance = OperationFactory.create(operation_name)
+        result = operation_instance(a_num, b_num)
 
-            # Execute operation using the factory
-            operation_instance = OperationFactory.create(operation_name)
-            result = operation_instance(float(a), float(b))
+        if math.isfinite(result):
+            result = round(result, config.precision)
+        else:
+            raise ValidationError(f"Result of {operation_name} is not finite.")
 
-            # Apply precision rounding from config
-            if config.precision is not None:
-                result = round(result, config.precision)
+        return Calculation(
+            operation=operation_name.lower().strip(),
+            a=a_num,
+            b=b_num,
+            result=result,
+            timestamp=datetime.now(),
+        )
 
-            return Calculation(
-                operation=operation_name.lower().strip(),
-                a=float(a),
-                b=float(b),
-                result=result,
-                timestamp=datetime.now(),
-            )
+    except (ValidationError, OperationError):
+        raise
+    except Exception as e:
+        raise OperationError(f"Unexpected error executing '{operation_name}': {e}")
 
-        except (ValidationError, OperationError):
-            # Re-raise known, expected calculator errors unchanged
-            raise
-        except Exception as e:
-            # Wrap any other error type
-            raise OperationError(f"Unexpected error executing operation '{operation_name}': {e}")

@@ -62,3 +62,33 @@ def validate_inputs(operation_name: str, a, b, max_value: float):
 
     if name == "root":
         validate_root(a, b)
+
+def to_float(value) -> float:
+    """Convert safely to float; raise ValidationError if impossible."""
+    try:
+        val = float(value)
+    except (TypeError, ValueError):
+        raise ValidationError(f"Input {value!r} is not a number.")
+    if not math.isfinite(val):
+        raise ValidationError(f"Input {value!r} is not finite.")
+    return val
+
+
+def sanitize_inputs(a, b):
+    """Return numeric (float) equivalents after validating finite."""
+    return to_float(a), to_float(b)
+
+
+def validate_inputs(operation_name: str, a, b, max_value: float):
+    """Composite validation entrypoint (enhanced Phase 2.3)."""
+    name = operation_name.lower().strip()
+    a, b = sanitize_inputs(a, b)
+    validate_range(a, b, max_value)
+
+    if name in {"divide", "modulus", "int_divide", "percent"}:
+        validate_division(b)
+
+    if name == "root":
+        validate_root(a, b)
+
+    return a, b  # useful for clean numeric results
