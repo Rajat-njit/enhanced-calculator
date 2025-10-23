@@ -25,38 +25,45 @@ class Caretaker:
         self._undo_stack: List[CalculatorMemento] = []
         self._redo_stack: List[CalculatorMemento] = []
 
-    # ---------------------
-    # Core operations
-    # ---------------------
-
     def save(self, memento: CalculatorMemento) -> None:
-        """Save current state to undo stack; clear redo stack."""
+        """Push new memento onto undo stack and clear redo stack."""
         self._undo_stack.append(memento)
         self._redo_stack.clear()
 
     def undo(self, current_state: List[Calculation]) -> Optional[List[Calculation]]:
-        """Revert to the previous state."""
-        if not self._undo_stack:
+        """Revert to the previous saved state."""
+        if len(self._undo_stack) <= 1:
             raise HistoryError("Nothing to undo.")
+
+        # Current state → redo stack
         self._redo_stack.append(CalculatorMemento.from_history(current_state))
-        previous = self._undo_stack.pop()
+
+        # Remove the most recent snapshot (current state)
+        self._undo_stack.pop()
+
+        # Restore the previous one
+        previous = self._undo_stack[-1]
         return deepcopy(previous.state)
 
     def redo(self, current_state: List[Calculation]) -> Optional[List[Calculation]]:
         """Reapply a previously undone state."""
         if not self._redo_stack:
             raise HistoryError("Nothing to redo.")
+
+        # Save current to undo stack
         self._undo_stack.append(CalculatorMemento.from_history(current_state))
+
+        # Restore next state
         next_state = self._redo_stack.pop()
         return deepcopy(next_state.state)
 
     def clear(self) -> None:
-        """Clear all stacks."""
+        """Reset all stacks."""
         self._undo_stack.clear()
         self._redo_stack.clear()
 
     def can_undo(self) -> bool:
-        return bool(self._undo_stack)
+        return len(self._undo_stack)
 
     def can_redo(self) -> bool:
         return bool(self._redo_stack)
