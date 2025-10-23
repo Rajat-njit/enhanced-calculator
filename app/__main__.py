@@ -103,7 +103,22 @@ def main():
                 except HistoryError as e:
                     print(f"⚠️  {e}")
                 continue
+            elif cmd == "save":
+                try:
+                    calc.history.save_to_csv(calc.config.history_path, calc.config.default_encoding)
+                    print(f"✅ History saved to {calc.config.history_path}")
+                except HistoryError as e:
+                    print(f"❌ {e}")
+                continue
 
+            elif cmd == "load":
+                try:
+                    calc.history.load_from_csv(calc.config.history_path, calc.config.default_encoding)
+                    print(f"✅ History loaded from {calc.config.history_path}")
+                except HistoryError as e:
+                    print(f"❌ {e}")
+                continue
+                
             # --- Arithmetic commands ---
             elif cmd in COMMANDS and cmd not in {"help", "exit", "history", "undo", "redo", "clear"}:
                 a, b = parse_numbers(args)
