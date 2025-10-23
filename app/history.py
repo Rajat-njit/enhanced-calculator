@@ -89,3 +89,49 @@ class History:
         new_state = self._caretaker.redo(self._items)
         self._items = new_state or []
         self._pointer = len(self._items) - 1
+
+    # --------------------------------------------
+    # Persistence methods (Phase 4.3)
+    # --------------------------------------------
+    def save_to_csv(self, file_path: str, encoding: str = "utf-8") -> None:
+        """Save all calculations to a CSV file."""
+        try:
+            rows = [
+                {
+                    "timestamp": c.timestamp.isoformat(timespec="seconds"),
+                    "operation": c.operation,
+                    "a": c.a,
+                    "b": c.b,
+                    "result": c.result,
+                }
+                for c in self._items
+            ]
+            df = pd.DataFrame(rows)
+            df.to_csv(file_path, index=False, encoding=encoding)
+        except Exception as e:
+            raise HistoryError(f"Failed to save history: {e}")
+
+    def load_from_csv(self, file_path: str, encoding: str = "utf-8") -> None:
+        """Load calculations from a CSV file and replace current history."""
+        try:
+            df = pd.read_csv(file_path, encoding=encoding)
+            new_items = []
+            for _, row in df.iterrows():
+                new_items.append(
+                    Calculation(
+                        operation=str(row["operation"]),
+                        a=float(row["a"]),
+                        b=float(row["b"]),
+                        result=float(row["result"]),
+                        timestamp=pd.to_datetime(row["timestamp"]).to_pydatetime(),
+                    )
+                )
+            self._items = new_items
+            # refresh caretaker state if present
+            if self._caretaker:
+                self._caretaker.clear()
+                self.record_state()
+        except FileNotFoundError:
+            raise HistoryError(f"History file '{file_path}' not found.")
+        except Exception as e:
+            raise HistoryError(f"Failed to load history: {e}")
