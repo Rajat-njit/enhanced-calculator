@@ -116,3 +116,33 @@ class AbsDiff:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return abs(a - b)
+
+# ---------------------
+# Factory
+# ---------------------
+
+class OperationFactory:
+    """Create operation instances by name."""
+    _registry: Dict[str, Callable[[], Operation]] = {
+        "add": Add,
+        "subtract": Subtract,
+        "multiply": Multiply,
+        "divide": Divide,
+        "power": Power,
+        "root": Root,
+        "modulus": Modulus,
+        "int_divide": IntDivide,
+        "percent": Percent,
+        "abs_diff": AbsDiff,
+        # Optional aliases:
+        "mod": Modulus,
+        "idiv": IntDivide,
+    }
+
+    @staticmethod
+    def create(name: str) -> Operation:
+        key = str(name).strip().lower()
+        op_cls = OperationFactory._registry.get(key)
+        if not op_cls:
+            raise OperationError(f"Unknown operation: {name!r}")
+        return op_cls()

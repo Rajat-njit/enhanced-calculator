@@ -79,3 +79,24 @@ def test_percent():
 def test_abs_diff():
     assert AbsDiff()(10, 3) == 7
     assert AbsDiff()(-3, 5) == 8
+
+def test_factory_creates_known_ops():
+    cases = [
+        ("add", Add),
+        ("subtract", Subtract),
+        ("multiply", Multiply),
+        ("divide", Divide),
+        ("power", Power),
+        ("root", Root),
+        ("modulus", Modulus),
+        ("int_divide", IntDivide),
+        ("percent", Percent),
+        ("abs_diff", AbsDiff),
+    ]
+    for name, cls in cases:
+        op = OperationFactory.create(name)
+        assert isinstance(op, cls)
+
+def test_factory_unknown_raises():
+    with pytest.raises(OperationError):
+        OperationFactory.create("unknown_op")
