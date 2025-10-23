@@ -1,6 +1,10 @@
+# pragma: no cover
+
 """Command-Line REPL interface for Enhanced Calculator (Phase 3.4)."""
 
 import sys
+from .help_menu import print_help_menu
+from .decorators import operation_registry
 from app.calculator import Calculator
 from app.history import History
 from app.calculator_memento import Caretaker
@@ -28,11 +32,23 @@ COMMANDS = {
 }
 
 
+from colorama import Fore, Style
+
 def show_help():
-    print("\nAvailable Commands:")
+    print(Fore.CYAN + "\n=== 🧠 Dynamic Help Menu ===" + Style.RESET_ALL)
+
+    if operation_registry:
+        print(Fore.YELLOW + "\nAvailable Operations:" + Style.RESET_ALL)
+        for name, meta in sorted(operation_registry.items()):
+            print(f"  {Fore.GREEN}{name:<12}{Style.RESET_ALL} - {meta['desc']}")
+    else:
+        print(Fore.RED + "(no operations registered)" + Style.RESET_ALL)
+
+    print(Fore.YELLOW + "\nCore Commands:" + Style.RESET_ALL)
     for cmd, desc in COMMANDS.items():
-        print(f"  {cmd:<12} - {desc}")
+        print(f"  {Fore.BLUE}{cmd:<12}{Style.RESET_ALL} - {desc}")
     print()
+
 
 
 def parse_numbers(args):
@@ -118,7 +134,7 @@ def main():
                 except HistoryError as e:
                     print(f"❌ {e}")
                 continue
-                
+
             # --- Arithmetic commands ---
             elif cmd in COMMANDS and cmd not in {"help", "exit", "history", "undo", "redo", "clear"}:
                 a, b = parse_numbers(args)
