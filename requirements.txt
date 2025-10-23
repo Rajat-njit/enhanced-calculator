@@ -1,6 +1,6 @@
 pandas
-python-dotenv
 pytest
 pytest-cov
 colorama
+python-dotenv>=1.0.1
 
