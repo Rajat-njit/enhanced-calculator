@@ -68,19 +68,25 @@ class Power:
 @dataclass(frozen=True)
 class Root:
     """Compute the b-th root of a: root(a, b) = a ** (1/b).
-    Phase 1 minimal rules:
-      - b == 0 -> error
-      - negative a with even integer b -> error (Phase 2 will formalize)
+    Handles negative a with odd integer b correctly.
     """
+
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
+
         if b == 0:
             raise OperationError("Root with zero degree is undefined.")
-        # If b is an integer and even, disallow negative radicand
+
+        # Even root of negative number is invalid
         if a < 0 and float(b).is_integer() and int(abs(b)) % 2 == 0:
             raise OperationError("Even root of a negative number is not real.")
-        return a ** (1.0 / b)
 
+        # Handle negative base with odd integer root correctly
+        if a < 0 and float(b).is_integer() and int(abs(b)) % 2 == 1:
+            return -((-a) ** (1.0 / b))
+
+        # Normal positive or fractional root
+        return a ** (1.0 / b)
 
 @dataclass(frozen=True)
 class Modulus:
