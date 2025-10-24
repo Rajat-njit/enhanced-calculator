@@ -1,4 +1,3 @@
-```markdown
 # 🧮 Enhanced Calculator — A Python Design Patterns Project
 **Author:** Rajat Pednekar | UCID: rp2348
 
