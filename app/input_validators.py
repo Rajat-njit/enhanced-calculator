@@ -51,6 +51,7 @@ def validate_root(a, b):
         raise OperationError("Even root of negative number is not real.")
 
 
+'''
 def validate_inputs(operation_name: str, a, b, max_value: float):
     """Composite validation entrypoint for any operation."""
     name = operation_name.lower().strip()
@@ -62,7 +63,7 @@ def validate_inputs(operation_name: str, a, b, max_value: float):
 
     if name == "root":
         validate_root(a, b)
-
+'''
 def to_float(value) -> float:
     """Convert safely to float; raise ValidationError if impossible."""
     try:

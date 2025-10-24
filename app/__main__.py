@@ -1,64 +1,18 @@
 # pragma: no cover
-
-"""Command-Line REPL interface for Enhanced Calculator (Phase 3.4)."""
+"""Command-Line REPL interface for Enhanced Calculator (Decorator-based Help)."""
 
 import sys
-from .help_menu import print_help_menu
-from .decorators import operation_registry
+from colorama import Fore, Style, init
+init(autoreset=True)
+
 from app.calculator import Calculator
 from app.history import History
 from app.calculator_memento import Caretaker
 from app.exceptions import ValidationError, OperationError, HistoryError
 from app.logger import configure_logger_from_config, LoggingObserver, AutoSaveObserver
 
-
-COMMANDS = {
-    "add": "Add two numbers",
-    "subtract": "Subtract two numbers",
-    "multiply": "Multiply two numbers",
-    "divide": "Divide two numbers",
-    "power": "Raise one number to the power of another",
-    "root": "Find the nth root of a number",
-    "modulus": "Find remainder of division",
-    "int_divide": "Integer division (truncate)",
-    "percent": "Percentage (a/b * 100)",
-    "abs_diff": "Absolute difference between numbers",
-    "undo": "Undo the last operation",
-    "redo": "Redo a previously undone operation",
-    "history": "Display all past calculations",
-    "clear": "Clear the history and reset",
-    "help": "Show available commands",
-    "exit": "Exit the calculator",
-}
-
-
-from colorama import Fore, Style
-
-def show_help():
-    print(Fore.CYAN + "\n=== 🧠 Dynamic Help Menu ===" + Style.RESET_ALL)
-
-    if operation_registry:
-        print(Fore.YELLOW + "\nAvailable Operations:" + Style.RESET_ALL)
-        for name, meta in sorted(operation_registry.items()):
-            print(f"  {Fore.GREEN}{name:<12}{Style.RESET_ALL} - {meta['desc']}")
-    else:
-        print(Fore.RED + "(no operations registered)" + Style.RESET_ALL)
-
-    print(Fore.YELLOW + "\nCore Commands:" + Style.RESET_ALL)
-    for cmd, desc in COMMANDS.items():
-        print(f"  {Fore.BLUE}{cmd:<12}{Style.RESET_ALL} - {desc}")
-    print()
-
-
-
-def parse_numbers(args):
-    """Convert user input args into floats if possible."""
-    if len(args) != 2:
-        raise ValidationError("This command requires exactly two numbers.")
-    try:
-        return float(args[0]), float(args[1])
-    except ValueError:
-        raise ValidationError("Both operands must be numbers.")
+from app.help_menu import COMMAND_REGISTRY, print_help_menu
+import app.commands  # <-- IMPORTANT: imports register all commands via decorators
 
 
 def main():
@@ -70,91 +24,37 @@ def main():
     if calc.config.auto_save:
         calc.register_observer(AutoSaveObserver(calc.config))
 
-    print("\n=== 🧮 Enhanced Calculator ===")
-    print("Type 'help' to see available commands.")
-    print("Type 'exit' to quit.\n")
+    print(Fore.CYAN + "\n=== 🧮 Enhanced Calculator ===" + Style.RESET_ALL)
+    print(Fore.YELLOW + "Type 'help' to see available commands.")
+    print("Type 'exit' to quit.\n" + Style.RESET_ALL)
 
     while True:
         try:
-            raw = input(">>> ").strip()
+            raw = input(Fore.BLUE + ">>> " + Style.RESET_ALL).strip()
             if not raw:
                 continue
 
             parts = raw.split()
-            cmd = parts[0].lower()
-            args = parts[1:]
+            cmd, args = parts[0].lower(), parts[1:]
 
-            # --- Exit / Help commands ---
-            if cmd == "exit":
-                print("Goodbye! 👋")
-                sys.exit(0)
-            elif cmd == "help":
-                show_help()
+            # Dispatch via registry
+            if cmd in COMMAND_REGISTRY:
+                desc, handler = COMMAND_REGISTRY[cmd]
+                handler(calc, args)
                 continue
 
-            # --- History commands ---
-            elif cmd == "history":
-                hist = calc.get_history()
-                if not hist:
-                    print("(no history yet)")
-                else:
-                    for i, entry in enumerate(hist, 1):
-                        print(f"{i}. {entry}")
-                continue
-            elif cmd == "clear":
-                calc.clear_history()
-                print("History cleared.")
-                continue
-            elif cmd == "undo":
-                try:
-                    calc.undo()
-                    print("Undid last operation.")
-                except HistoryError as e:
-                    print(f"⚠️  {e}")
-                continue
-            elif cmd == "redo":
-                try:
-                    calc.redo()
-                    print("Redid last operation.")
-                except HistoryError as e:
-                    print(f"⚠️  {e}")
-                continue
-            elif cmd == "save":
-                try:
-                    calc.history.save_to_csv(calc.config.history_path, calc.config.default_encoding)
-                    print(f"✅ History saved to {calc.config.history_path}")
-                except HistoryError as e:
-                    print(f"❌ {e}")
-                continue
+            print(Fore.RED + f"Unknown command: '{cmd}'. Type 'help' for a list of commands." + Style.RESET_ALL)
 
-            elif cmd == "load":
-                try:
-                    calc.history.load_from_csv(calc.config.history_path, calc.config.default_encoding)
-                    print(f"✅ History loaded from {calc.config.history_path}")
-                except HistoryError as e:
-                    print(f"❌ {e}")
-                continue
-
-            # --- Arithmetic commands ---
-            elif cmd in COMMANDS and cmd not in {"help", "exit", "history", "undo", "redo", "clear"}:
-                a, b = parse_numbers(args)
-                result = calc.perform_operation(cmd, a, b)
-                print(f"Result: {result}")
-                continue
-
-            else:
-                print(f"Unknown command: '{cmd}'. Type 'help' for a list of commands.")
-
-        except (ValidationError, OperationError) as e:
-            print(f"❌ Error: {e}")
+        except (ValidationError, OperationError, HistoryError) as e:
+            print(Fore.RED + f"❌ Error: {e}" + Style.RESET_ALL)
         except KeyboardInterrupt:
-            print("\nInterrupted. Exiting gracefully.")
+            print(Fore.CYAN + "\n👋 Interrupted. Exiting gracefully." + Style.RESET_ALL)
             sys.exit(0)
         except EOFError:
-            print("\nGoodbye! 👋")
+            print(Fore.CYAN + "\n👋 Goodbye! (EOF received)" + Style.RESET_ALL)
             sys.exit(0)
         except Exception as e:
-            print(f"Unexpected error: {e}")
+            print(Fore.RED + f"Unexpected error: {e}" + Style.RESET_ALL)
 
 
 if __name__ == "__main__":

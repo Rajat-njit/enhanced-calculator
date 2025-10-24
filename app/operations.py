@@ -9,6 +9,7 @@ from dataclasses import dataclass
 from typing import Protocol, Dict, Callable
 from math import isfinite
 from .exceptions import OperationError
+from .decorators import register_operation
 
 
 class Operation(Protocol):
@@ -24,28 +25,28 @@ def _check_numbers(a: float, b: float) -> None:
 # ---------------------
 # Core operations
 # ---------------------
-
+@register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class Add:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return a + b
 
-
+@register_operation("subtract", "Subtracts b from a")
 @dataclass(frozen=True)
 class Subtract:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return a - b
 
-
+@register_operation("multiply", "Multiplies a and b")
 @dataclass(frozen=True)
 class Multiply:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return a * b
 
-
+@register_operation("divide", "Divides a by b")
 @dataclass(frozen=True)
 class Divide:
     def __call__(self, a: float, b: float) -> float:
@@ -57,14 +58,14 @@ class Divide:
 # ---------------------
 # Advanced operations
 # ---------------------
-
+@register_operation("power", "Computes a raised to the power b")
 @dataclass(frozen=True)
 class Power:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return a ** b
 
-
+@register_operation("root", "Computes the b-th root of a")
 @dataclass(frozen=True)
 class Root:
     """Compute the b-th root of a: root(a, b) = a ** (1/b).
@@ -87,7 +88,7 @@ class Root:
 
         # Normal positive or fractional root
         return a ** (1.0 / b)
-
+@register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class Modulus:
     def __call__(self, a: float, b: float) -> float:
@@ -96,7 +97,7 @@ class Modulus:
             raise OperationError("Modulus by zero.")
         return a % b
 
-
+@register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class IntDivide:
     """Integer division that discards fractional part (truncates toward zero)."""
@@ -106,7 +107,7 @@ class IntDivide:
             raise OperationError("Integer division by zero.")
         return float(int(a / b))  # truncation toward zero
 
-
+@register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class Percent:
     """Compute (a / b) * 100."""
@@ -116,7 +117,7 @@ class Percent:
             raise OperationError("Percentage denominator cannot be zero.")
         return (a / b) * 100.0
 
-
+@register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class AbsDiff:
     def __call__(self, a: float, b: float) -> float:

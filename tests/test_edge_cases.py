@@ -3,6 +3,8 @@ import pytest
 from app.calculation import Calculation
 from app.calculator_config import load_config
 from app.exceptions import ValidationError, OperationError
+from app.input_validators import validate_inputs
+from app.exceptions import ValidationError
 
 cfg = load_config()
 
@@ -43,3 +45,15 @@ def test_precision_rounding_applied():
 def test_inputs_exceeding_limit_raise():
     with pytest.raises(ValidationError):
         Calculation.create("add", 1e9, 1, cfg)
+
+def test_validate_invalid_number_type():
+    with pytest.raises(ValidationError):
+        validate_inputs("add", "abc", 2, 1000000)
+
+def test_validate_overflow_max_input():
+    with pytest.raises(ValidationError):
+        validate_inputs("add", 1e10, 1, 1_000_000)
+
+def test_validate_zero_root():
+    with pytest.raises(OperationError):
+        validate_inputs("root", 4, 0, 1_000_000)
