@@ -156,7 +156,7 @@ CALCULATOR_DEFAULT_ENCODING=utf-8
 │   └── __main__.py           # Application entrypoint
 ```
 
-### 🧠 Architectural Principles
+### 🔹  Architectural Principles
 
 * **DRY:** Shared logic consolidated in validators and logger.
 * **SRP:** Each module focuses on one responsibility.
@@ -165,9 +165,9 @@ CALCULATOR_DEFAULT_ENCODING=utf-8
 
 ---
 
-## 🧠 Design Patterns in Action
+## 🧩 Design Patterns in Action
 
-### 🏭 Factory Pattern
+### 🔹 Factory Pattern
 
 Centralizes object creation:
 
@@ -188,7 +188,7 @@ class OperationFactory:
 
 ---
 
-### 🕹️ Command Pattern
+### 🔹 Command Pattern
 
 Encapsulates user requests as command objects.
 
@@ -201,11 +201,11 @@ class OperationCommand:
         return self.operation.execute(self.a, self.b)
 ```
 
-💡 Enables queued, repeatable, and undoable actions — foundation for history management.
+ Enables queued, repeatable, and undoable actions — foundation for history management.
 
 ---
 
-### 🧠 Memento Pattern
+### 🔹 Memento Pattern
 
 Implements Undo/Redo functionality.
 
@@ -221,11 +221,11 @@ previous = caretaker.undo()
 calculator.restore_state(previous)
 ```
 
-💡 State restoration covers operands, results, and timestamps.
+ State restoration covers operands, results, and timestamps.
 
 ---
 
-### 🔔 Observer Pattern
+### 🔹 Observer Pattern
 
 Auto-handles side effects like logging and CSV saving.
 
@@ -234,7 +234,7 @@ calc.register_observer(LoggingObserver(logger))
 calc.register_observer(AutoSaveObserver(cfg))
 ```
 
-💡 Keeps business logic clean while ensuring persistence and traceability.
+ Keeps business logic clean while ensuring persistence and traceability.
 
 ---
 
@@ -252,7 +252,7 @@ Typing `help` reflects all registered commands in real-time.
 
 ---
 
-### 🪵 Logger (Singleton Pattern)
+### 🔹 Logger (Singleton Pattern)
 
 `configure_logger_from_config()` guarantees a **single global logger** across modules.
 
@@ -269,7 +269,7 @@ Prevents duplicate log entries, ensures consistency across modules and tests.
 
 ## ⚙️ Optional Features Implemented
 
-### 🌟 1. **Additional Design Pattern – Command Pattern**
+### 1. **Additional Design Pattern – Command Pattern**
 
 **Purpose:** Encapsulate actions as objects allowing **parameterization**, **queuing**, and **undoability**.
 
@@ -286,7 +286,7 @@ Enables **future automation** like macro commands or batch calculations.
 
 ---
 
-### 🎨 2. **Color-Coded Outputs (UI Enhancement)**
+### 2. **Color-Coded Outputs (UI Enhancement)**
 
 Implemented with **Colorama** for better user readability:
 
@@ -302,7 +302,7 @@ print(Fore.GREEN + "✅ Result: 25.0%" + Style.RESET_ALL)
 
 ---
 
-### 🧭 3. **Dynamic Help Menu (Decorator Pattern)**
+### 3. **Dynamic Help Menu (Decorator Pattern)**
 
 Help menu updates dynamically as new commands are added:
 
@@ -372,7 +372,7 @@ Type 'help' to see commands.
 
 ---
 
-## 🪵 Logging System
+## 🔹 Logging System
 
 ### 📁 Log File: `logs/app.log`
 
@@ -515,9 +515,10 @@ This project is both a **technical showcase** and a **learning model** for maint
 ---
 
 ## 👤 About the Author
-
+```
 **Rajat Pednekar**
-Graduate Student — Python for Web Development
-New Jersey Institute of Technology
+**Graduate Student — Python for Web Development**
+**New Jersey Institute of Technology**
+```
 ---
 ```
