@@ -1,8 +1,6 @@
 # 🧮 Enhanced Calculator — A Python Design Patterns Project  
-**Author:** Rajat Pednekar | UCID: rp2348  
-**Course:** Python for Web Development  
 
-![Build Status](https://github.com/<your-username>/enhanced-calculator/actions/workflows/python-app.yml/badge.svg)
+[![Python Enhanced Calculator CI](https://github.com/Rajat-njit/enhanced-calculator/actions/workflows/python-app.yml/badge.svg)](https://github.com/Rajat-njit/enhanced-calculator/actions/workflows/python-app.yml)
 
 ---
 
@@ -21,7 +19,7 @@ It serves as a case study in writing **maintainable**, **modular**, and **extens
 | **Factory** | Dynamically creates arithmetic operation objects | `operations.py` |
 | **Command** | Encapsulates operation requests as objects | `command_pattern.py` |
 | **Memento** | Enables Undo/Redo via saved calculator states | `calculator_memento.py` |
-| **Observer** | Handles automatic logging and CSV saving | `logger.py` |
+| **Observer** | Handles automatic logging and CSV saving | `logger.py` | `history.py`  |
 | **Decorator** | Dynamically generates the help menu | `decorators.py` |
 | **Singleton (Logger)** | Ensures single global logger instance | `logger.py` |
 
@@ -60,8 +58,8 @@ project_root/
 ├── requirements.txt
 ├── README.md
 └── .github/
-└── workflows/
-└── python-app.yml
+    ├── workflows/
+    ├── python-app.yml
 
 ````
 
@@ -84,9 +82,6 @@ git commit -m "Initial commit: Enhanced Calculator setup"
 git remote add origin https://github.com/<your-username>/enhanced-calculator.git
 git push -u origin master
 ````
-
-> 💡 Maintain a **clear, chronological commit history**. Projects without it may face integrity issues.
-
 ---
 
 ### 2️⃣ Create and Activate Virtual Environment
@@ -268,7 +263,7 @@ if not logger.handlers:
     ...
 ```
 
-💡 Prevents duplicate log entries, ensures consistency across modules and tests.
+Prevents duplicate log entries, ensures consistency across modules and tests.
 
 ---
 
@@ -287,7 +282,7 @@ for c in queue:
     print(c.execute())  # 8
 ```
 
-✅ Enables **future automation** like macro commands or batch calculations.
+Enables **future automation** like macro commands or batch calculations.
 
 ---
 
@@ -494,7 +489,6 @@ jobs:
 ```
 * 6197a3e (HEAD -> master) Implemented Color Coded Output
 * 7e9cdcb Added Dynamic Helper Decorator
-* 43ab7b0 Integrated LoggingObserver and AutoSaveObserver
 * 62835c2 Implemented Memento Pattern for Undo/Redo
 * 1c86be7 Added GitHub Actions for CI/CD
 ```
@@ -525,4 +519,5 @@ This project is both a **technical showcase** and a **learning model** for maint
 **Rajat Pednekar**
 Graduate Student — Python for Web Development
 New Jersey Institute of Technology
+---
 ```
