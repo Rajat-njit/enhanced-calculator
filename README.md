@@ -1,8 +1,3 @@
-No problem\! I've updated the **Project Architecture** section with the corrected file structure you provided.
-
-Here is the complete, updated markdown script ready for you to copy and paste.
-
-````markdown
 # 🧮 Enhanced Calculator — A Python Design Patterns Project
 **Author:** Rajat Pednekar | UCID: rp2348
 
