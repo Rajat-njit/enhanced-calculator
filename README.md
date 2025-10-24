@@ -19,7 +19,7 @@ It serves as a case study in writing **maintainable**, **modular**, and **extens
 | **Factory** | Dynamically creates arithmetic operation objects | `operations.py` |
 | **Command** | Encapsulates operation requests as objects | `command_pattern.py` |
 | **Memento** | Enables Undo/Redo via saved calculator states | `calculator_memento.py` |
-| **Observer** | Handles automatic logging and CSV saving | `logger.py` | `history.py`  |
+| **Observer** | Handles automatic logging and CSV saving | `logger.py`  `history.py`  |
 | **Decorator** | Dynamically generates the help menu | `decorators.py` |
 | **Singleton (Logger)** | Ensures single global logger instance | `logger.py` |
 
@@ -59,7 +59,7 @@ project_root/
 ├── README.md
 └── .github/
     ├── workflows/
-    ├── python-app.yml
+    └── python-app.yml
 
 ````
 
