@@ -1,7 +1,14 @@
-"""Operations and Factory (Phase 1.1–1.4).
+# Author: Rajat Pednekar | UCID: rp2348
 
-Each operation implements a callable interface:
-    result = Operation()(a: float, b: float) -> float
+"""
+operations.py
+--------------
+Defines all supported arithmetic operation classes, each implementing
+a common callable interface for computation.
+
+Design Pattern:
+    - Factory Pattern: OperationFactory creates operation instances.
+    - Strategy Pattern (conceptual): Each operation encapsulates unique behavior.
 """
 
 from __future__ import annotations
@@ -11,7 +18,9 @@ from math import isfinite
 from .exceptions import OperationError
 from .decorators import register_operation
 
-
+# -----------------------------
+# Protocol Definition
+# -----------------------------
 class Operation(Protocol):
     """Callable arithmetic operation over two floats."""
     def __call__(self, a: float, b: float) -> float: ...
@@ -22,15 +31,16 @@ def _check_numbers(a: float, b: float) -> None:
     if not (isfinite(a) and isfinite(b)):
         raise OperationError("Inputs must be finite numbers.")
 
-# ---------------------
-# Core operations
-# ---------------------
+# -----------------------------
+# Operation Implementations
+# -----------------------------
 @register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class Add:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return a + b
+
 
 @register_operation("subtract", "Subtracts b from a")
 @dataclass(frozen=True)
@@ -39,12 +49,14 @@ class Subtract:
         _check_numbers(a, b)
         return a - b
 
+
 @register_operation("multiply", "Multiplies a and b")
 @dataclass(frozen=True)
 class Multiply:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return a * b
+
 
 @register_operation("divide", "Divides a by b")
 @dataclass(frozen=True)
@@ -55,15 +67,18 @@ class Divide:
             raise OperationError("Division by zero.")
         return a / b
 
+
 # ---------------------
 # Advanced operations
 # ---------------------
+
 @register_operation("power", "Computes a raised to the power b")
 @dataclass(frozen=True)
 class Power:
     def __call__(self, a: float, b: float) -> float:
         _check_numbers(a, b)
         return a ** b
+
 
 @register_operation("root", "Computes the b-th root of a")
 @dataclass(frozen=True)
@@ -88,6 +103,8 @@ class Root:
 
         # Normal positive or fractional root
         return a ** (1.0 / b)
+
+
 @register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class Modulus:
@@ -96,6 +113,7 @@ class Modulus:
         if b == 0:
             raise OperationError("Modulus by zero.")
         return a % b
+
 
 @register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
@@ -107,6 +125,7 @@ class IntDivide:
             raise OperationError("Integer division by zero.")
         return float(int(a / b))  # truncation toward zero
 
+
 @register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class Percent:
@@ -117,6 +136,7 @@ class Percent:
             raise OperationError("Percentage denominator cannot be zero.")
         return (a / b) * 100.0
 
+
 @register_operation("add", "Adds two numbers (a + b)")
 @dataclass(frozen=True)
 class AbsDiff:
@@ -124,9 +144,10 @@ class AbsDiff:
         _check_numbers(a, b)
         return abs(a - b)
 
-# ---------------------
-# Factory
-# ---------------------
+
+# -----------------------------
+# Operation Factory
+# -----------------------------
 
 class OperationFactory:
     """Create operation instances by name."""
@@ -148,6 +169,18 @@ class OperationFactory:
 
     @staticmethod
     def create(name: str) -> Operation:
+        """
+        Instantiates an operation based on its name.
+
+        Args:
+            name (str): The operation name.
+
+        Returns:
+            Operation: Instantiated operation object.
+
+        Raises:
+            OperationError: If operation name is not recognized.
+        """
         key = str(name).strip().lower()
         op_cls = OperationFactory._registry.get(key)
         if not op_cls:

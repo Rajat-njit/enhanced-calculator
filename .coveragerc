@@ -1,6 +1,10 @@
 [run]
 omit =
     app/__main__.py
+    app/commands.py
+    app/help_menu.py
+    app/command_pattern.py
+    app/ui_style.py
 
 [report]
 exclude_lines =

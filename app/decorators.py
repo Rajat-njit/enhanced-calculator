@@ -1,4 +1,16 @@
-# app/decorators.py
+# Author: Rajat Pednekar | UCID: rp2348
+
+"""
+decorators.py
+--------------
+Implements the Decorator Design Pattern used to dynamically enhance
+the help menu with new operations at runtime.
+
+Design Pattern:
+    - Decorator Pattern: Each decorator wraps the base help provider
+      and extends the description list without modifying its source code.
+"""
+
 from typing import Callable, Dict, Any
 
 operation_registry: Dict[str, Dict[str, Any]] = {}

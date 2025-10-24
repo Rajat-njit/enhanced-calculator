@@ -1,8 +1,13 @@
-"""Comprehensive input validation utilities (Phase 2.1).
+# Author: Rajat Pednekar | UCID: rp2348
 
-All validation rules are centralized here. The goal is to ensure
-that every operation receives only safe, finite, and reasonable
-inputs before execution.
+"""
+input_validators.py
+-------------------
+Centralized input validation logic to ensure all calculator operations
+receive safe, finite, and meaningful numerical values.
+
+Design Principle:
+    - DRY (Don’t Repeat Yourself): All validation checks centralized here.
 """
 
 import math
@@ -51,19 +56,6 @@ def validate_root(a, b):
         raise OperationError("Even root of negative number is not real.")
 
 
-'''
-def validate_inputs(operation_name: str, a, b, max_value: float):
-    """Composite validation entrypoint for any operation."""
-    name = operation_name.lower().strip()
-    validate_numeric(a, b)
-    validate_range(a, b, max_value)
-
-    if name in {"divide", "modulus", "int_divide", "percent"}:
-        validate_division(b)
-
-    if name == "root":
-        validate_root(a, b)
-'''
 def to_float(value) -> float:
     """Convert safely to float; raise ValidationError if impossible."""
     try:
@@ -81,7 +73,24 @@ def sanitize_inputs(a, b):
 
 
 def validate_inputs(operation_name: str, a, b, max_value: float):
-    """Composite validation entrypoint (enhanced Phase 2.3)."""
+    
+
+    """
+    Central entrypoint for all input validation based on operation type.
+
+    Args:
+        operation_name (str): The operation being performed.
+        a, b: Input operands.
+        max_value (float): Maximum allowed numeric magnitude.
+
+    Returns:
+        tuple[float, float]: Validated float-converted operands.
+
+    Raises:
+        ValidationError: If inputs are invalid.
+        OperationError: If operation-specific constraints fail.
+    """
+
     name = operation_name.lower().strip()
     a, b = sanitize_inputs(a, b)
     validate_range(a, b, max_value)
@@ -92,4 +101,4 @@ def validate_inputs(operation_name: str, a, b, max_value: float):
     if name == "root":
         validate_root(a, b)
 
-    return a, b  # useful for clean numeric results
+    return a, b

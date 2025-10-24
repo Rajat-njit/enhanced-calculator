@@ -1,4 +1,15 @@
-"""Calculation entity and creation logic (Phase 2.2–2.3)."""
+# Author: Rajat Pednekar
+
+"""
+calculation.py
+--------------
+Defines the `Calculation` class, which encapsulates a single arithmetic operation.
+This class is designed to be immutable and used as a data record for calculations.
+It provides a factory method to create validated operations safely.
+
+Design Pattern:
+    - Factory Pattern: Used indirectly via OperationFactory to create operation instances.
+"""
 
 from __future__ import annotations
 from dataclasses import dataclass
@@ -13,7 +24,18 @@ from .calculator_config import CalculatorConfig
 
 @dataclass(frozen=True)
 class Calculation:
-    """Immutable record of a single calculator operation."""
+    
+    """
+    Represents a single arithmetic calculation.
+
+    Attributes:
+        operation (str): Name of the operation (e.g., 'add', 'divide').
+        a (float): First operand.
+        b (float): Second operand.
+        result (float): Computed result.
+        timestamp (datetime): Time when calculation was created.
+    """
+
     operation: str
     a: float
     b: float
@@ -22,7 +44,23 @@ class Calculation:
 
     @staticmethod
     def create(operation_name: str, a, b, config: CalculatorConfig) -> "Calculation":
-        """Validate inputs, execute operation via factory, and return a Calculation."""
+        
+        """
+        Factory method to safely create a Calculation instance.
+
+        Args:
+            operation (str): Operation name.
+            a (float): First operand.
+            b (float): Second operand.
+            cfg: Calculator configuration object for precision.
+
+        Returns:
+            Calculation: The completed calculation record.
+
+        Raises:
+            OperationError: If the operation creation or execution fails.
+        """
+        
         try:
             # Run validations (returns numeric floats)
             a_num, b_num = validate_inputs(operation_name, a, b, config.max_input_value)

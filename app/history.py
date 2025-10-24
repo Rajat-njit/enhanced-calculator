@@ -1,6 +1,13 @@
-"""History management (Phase 3.1).
+# Author: Rajat Pednekar | UCID: rp2348
 
-Stores and manages Calculation records with optional size limits.
+"""
+history.py
+-----------
+Implements the History class responsible for storing and managing past calculations.
+Supports undo/redo functionality via the Memento Design Pattern.
+
+Design Pattern:
+    - Memento Pattern: For state restoration via Caretaker and CalculatorMemento.
 """
 
 from __future__ import annotations
@@ -12,11 +19,18 @@ from .exceptions import HistoryError
 from .calculator_memento import Caretaker, CalculatorMemento
 
 
-
-
 @dataclass
 class History:
-    """Container for storing past calculations."""
+   
+    """
+    Manages a list of past calculations with undo/redo functionality.
+
+    Attributes:
+        _items (list): Stored Calculation instances.
+        _pointer (int): Current index pointer in history.
+        max_size (int): Maximum allowed history entries.
+    """
+
     max_size: int = 50
 
     def __post_init__(self):
@@ -28,7 +42,17 @@ class History:
     # -----------------
 
     def add(self, calc: Calculation) -> None:
-        """Add a new calculation to history, respecting size limit."""
+        
+        """
+        Adds a new calculation to the history and enforces maximum size.
+
+        Args:
+            calc (Calculation): The calculation to store.
+
+        Raises:
+            HistoryError: If the provided object is not a Calculation.
+        """
+
         if not isinstance(calc, Calculation):
             raise HistoryError("Only Calculation instances can be added to history.")
 
@@ -94,7 +118,7 @@ class History:
         self._pointer = len(self._items) - 1
 
     # --------------------------------------------
-    # Persistence methods (Phase 4.3)
+    # Persistence methods
     # --------------------------------------------
     def save_to_csv(self, file_path: str, encoding: str = "utf-8") -> None:
         """Save all calculations to a CSV file."""
@@ -134,7 +158,7 @@ class History:
             if hasattr(self, "_caretaker") and self._caretaker:
                 self._caretaker.clear()
                 self.record_state()
-                
+
         except FileNotFoundError:
             raise HistoryError(f"History file '{file_path}' not found.")
         except Exception as e:
