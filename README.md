@@ -1,5 +1,3 @@
-Here is the complete text formatted as a single markdown script, ready for you to copy and paste.
-
 ```markdown
 # 🧮 Enhanced Calculator — A Python Design Patterns Project
 **Author:** Rajat Pednekar | UCID: rp2348
