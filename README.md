@@ -1,60 +1,237 @@
-# 🧮 Enhanced Calculator — A Python Design Patterns Project
-**Author:** Rajat Pednekar | UCID: rp2348
+# 🧮 Enhanced Calculator — A Python Design Patterns Project  
+**Author:** Rajat Pednekar | UCID: rp2348  
+**Course:** Python for Web Development  
+**Instructor:** [Your Professor’s Name]  
 
 ---
 
 ## 📘 Project Overview
 
-The **Enhanced Calculator** is a modular, object-oriented **command-line calculator** built to demonstrate the real-world application of **Software Design Patterns** in Python.
+The **Enhanced Calculator** is a command-line Python application designed to demonstrate **object-oriented programming** and **software design patterns** in real-world software architecture.  
 
-Unlike traditional calculators, this project focuses on:
-- Robust **software architecture**
-- **Reusability**, **extensibility**, and **testability**
-- Clean, modular code that enforces **SOLID principles**
-- Real-world engineering practices like **CI/CD**, **logging**, and **config-driven behavior**
+This project moves beyond simple arithmetic — it integrates **modularity**, **maintainability**, and **professional development practices** such as **logging**, **configuration management**, **CI/CD**, and **unit testing** with **100% coverage enforcement**.
 
----
+The calculator supports a **fully interactive REPL (Read-Eval-Print Loop)** interface, dynamic help menus, automatic history management, and persistent storage using CSV and logging observers.
 
-## 🎯 Learning Goals
-
-The project was designed to demonstrate:
-- The power of **Design Patterns** in scalable software design
-- The importance of **logging**, **configuration management**, and **testing discipline**
-- How to create a **cleanly architected CLI application** using professional-grade Python practices
+### 🎯 Objectives
+- Implement key **software design patterns** for real-world scalability.  
+- Demonstrate **professional software engineering practices** — CI/CD, logging, testing, configuration.  
+- Reinforce concepts of **OOP**, **SOLID**, and **DRY** principles.  
+- Provide a **clear commit history**, **modular code**, and **well-documented architecture**.  
 
 ---
 
-## 🧩 Implemented Design Patterns (With Examples)
+## 🧩 Key Design Patterns Implemented
 
-### 🏭 Factory Pattern
-**Purpose:** Centralize creation of operation objects (`Add`, `Subtract`, `Power`, etc.) to simplify extensibility.
+| Design Pattern | Purpose | Module |
+|----------------|----------|---------|
+| **Factory** | Centralizes creation of operation objects dynamically | `operations.py` |
+| **Command** | Encapsulates requests (operations) as objects | `command_pattern.py` |
+| **Memento** | Enables undo/redo by storing calculator states | `calculator_memento.py` |
+| **Observer** | Logs and auto-saves results automatically | `logger.py` |
+| **Decorator** | Dynamically generates help menu | `decorators.py` |
+| **Singleton/Config Loader** | Loads and validates environment configs | `calculator_config.py` |
 
-**Where:** `app/operations.py`
+---
 
-**Example:**
-```python
-class OperationFactory:
-    @staticmethod
-    def create(operation: str):
-        if operation == "add":
-            return AddOperation()
-        elif operation == "divide":
-            return DivideOperation()
-        ...
+## 🏗️ Repository Setup
+
+### 📁 Directory Structure
+
+```
+
+project_root/
+├── app/
+│   ├── **init**.py
+│   ├── calculator.py
+│   ├── calculation.py
+│   ├── calculator_config.py
+│   ├── calculator_memento.py
+│   ├── exceptions.py
+│   ├── history.py
+│   ├── input_validators.py
+│   ├── operations.py
+│   ├── logger.py
+│   ├── command_pattern.py
+│   ├── commands.py
+│   ├── help_menu.py
+│   ├── decorators.py
+│   └── ui_style.py
+│
+├── tests/
+│   ├── **init**.py
+│   ├── test_calculator.py
+│   ├── test_calculation.py
+│   ├── test_operations.py
+│   ├── test_logger.py
+│   └── ...
+│
+├── .env
+├── requirements.txt
+├── README.md
+└── .github/
+└── workflows/
+└── python-app.yml
+
 ````
 
-**How it helps:**
+### 🧠 Purpose of Key Folders
+- `app/`: Core logic, operations, and patterns implementation  
+- `tests/`: Pytest-based automated tests for all modules  
+- `.github/workflows/`: CI/CD configuration using GitHub Actions  
+- `.env`: Configuration variables for logging, precision, and limits  
 
-  - New operations (e.g., `SquareRoot`, `Logarithm`) can be added without touching core calculator logic.
-  - Enforces **Open-Closed Principle** — open for extension, closed for modification.
+---
 
-### 🕹️ Command Pattern
+## ⚙️ Environment Setup
 
-**Purpose:** Encapsulate each calculator operation as an independent command that can be executed, undone, or redone.
+### 1️⃣ Initialize a Git Repository
+```bash
+git init
+git add .
+git commit -m "Initial commit: setup enhanced calculator structure"
+git remote add origin https://github.com/<your-username>/enhanced-calculator.git
+git push -u origin master
+````
 
-**Where:** `app/command_pattern.py`
+> 💡 **Commit regularly** — descriptive commit messages are mandatory for grading.
+> Projects without a clear commit history will be flagged under academic integrity.
 
-**Example:**
+---
+
+### 2️⃣ Create and Activate Virtual Environment
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### 3️⃣ Install Dependencies
+
+Ensure all dependencies are in `requirements.txt`:
+
+```text
+colorama
+pytest
+pytest-cov
+python-dotenv
+pandas
+```
+
+Then install:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 🧾 Configuration Setup (`.env`)
+
+The calculator uses `.env` for flexible configuration.
+
+```bash
+# Directories
+CALCULATOR_LOG_DIR=logs
+CALCULATOR_HISTORY_DIR=history
+
+# History and Behavior
+CALCULATOR_MAX_HISTORY_SIZE=50
+CALCULATOR_AUTO_SAVE=true
+
+# Calculations
+CALCULATOR_PRECISION=2
+CALCULATOR_MAX_INPUT_VALUE=1000000
+CALCULATOR_DEFAULT_ENCODING=utf-8
+```
+
+Loaded automatically by `calculator_config.py` using `python-dotenv`.
+
+---
+
+## 🧱 Project Architecture and Modular Design
+
+```
+📦 enhanced-calculator/
+│
+├── 🧠 Core Logic
+│   ├── calculator.py          # Orchestrates operations, manages observers
+│   ├── calculation.py         # Represents an atomic calculation
+│   ├── operations.py          # Arithmetic operation factory
+│   └── history.py             # Manages history stack
+│
+├── 🧩 Design Patterns
+│   ├── calculator_memento.py  # Memento for undo/redo
+│   ├── command_pattern.py     # Encapsulated operation commands
+│   ├── logger.py              # Observer Pattern (logging + autosave)
+│   ├── decorators.py          # Decorator Pattern for dynamic help
+│   └── help_menu.py           # Uses decorators to generate help dynamically
+│
+├── ⚙️ Configuration & Validation
+│   ├── calculator_config.py   # Loads .env configs, validates
+│   ├── input_validators.py    # Validates user input
+│   └── exceptions.py          # Custom error handling
+│
+├── 🎨 CLI & UI Layer
+│   ├── commands.py            # User REPL commands
+│   ├── ui_style.py            # Color-coded messages (Colorama)
+│   └── main (__main__.py)     # CLI entry point
+```
+
+### 🧩 Best Practices
+
+* **DRY Principle:** Reused methods and validation checks avoid duplication.
+* **Single Responsibility:** Each module has one defined purpose.
+* **Open/Closed Principle:** Operations can be extended without changing base code.
+* **Encapsulation:** Logging, validation, and persistence are decoupled from calculator logic.
+
+---
+
+## 🧮 Supported Operations
+
+### Mandatory Operations
+
+| Operation        | Example       | Description                  |   |                     |
+| ---------------- | ------------- | ---------------------------- | - | ------------------- |
+| `add a b`        | 5 + 7 → 12    | Addition                     |   |                     |
+| `subtract a b`   | 10 - 4 → 6    | Subtraction                  |   |                     |
+| `multiply a b`   | 3 * 6 → 18    | Multiplication               |   |                     |
+| `divide a b`     | 8 / 2 → 4     | Division with error handling |   |                     |
+| `power a b`      | 2^4 → 16      | Exponentiation               |   |                     |
+| `root a b`       | √a (nth root) | b-th root of a               |   |                     |
+| `modulus a b`    | 10 % 4 → 2    | Remainder                    |   |                     |
+| `int_divide a b` | 11 // 4 → 2   | Integer division             |   |                     |
+| `percent a b`    | (a/b) * 100   | Percentage                   |   |                     |
+| `abs_diff a b`   |               | a−b                          |   | Absolute difference |
+
+---
+
+## 🧠 Design Patterns Explained with Examples
+
+### 🏭 Factory Pattern — `operations.py`
+
+Creates operation objects dynamically:
+
+```python
+class OperationFactory:
+    def create(op_name: str):
+        ops = {
+            "add": AddOperation(),
+            "divide": DivideOperation(),
+            "modulus": ModulusOperation(),
+        }
+        if op_name not in ops:
+            raise OperationError(f"Unknown operation: {op_name}")
+        return ops[op_name]
+```
+
+💡 **Why:** Simplifies adding new operations — just define a new class and register it.
+
+---
+
+### 🕹️ Command Pattern — `command_pattern.py`
+
+Encapsulates user actions as objects, enabling queuing, reuse, and undo.
 
 ```python
 class OperationCommand:
@@ -67,73 +244,56 @@ class OperationCommand:
         return self.operation.execute(self.a, self.b)
 ```
 
-**Usage:**
+**Benefit:**
 
-```python
-cmd = OperationCommand(AddOperation(), 5, 3)
-result = cmd.execute()  # 8
-```
+* Each command can be logged, saved, or reversed.
+* Makes the system more flexible and testable.
 
-This separation makes it trivial to:
+---
 
-  - Add new commands dynamically
-  - Record operations for Undo/Redo functionality
-  - Trigger side effects like logging through observers
+### 🧠 Memento Pattern — `calculator_memento.py`
 
-### 🧠 Memento Pattern
-
-**Purpose:** Allow the calculator to revert or redo previous states.
-
-**Where:** `app/calculator_memento.py`
-
-**Concept:**
-The calculator state (operands, result, timestamp) is wrapped in a `Memento` object.
-Two stacks — `undo` and `redo` — manage historical states.
-
-**Example:**
+Stores calculator states for undo/redo.
 
 ```python
 memento = CalculatorMemento(current_state)
 caretaker.save_state(memento)
 ```
 
-When `undo` is called:
+When `undo` is invoked:
 
 ```python
-previous_state = caretaker.undo()
-calculator.restore_state(previous_state)
+previous = caretaker.undo()
+calculator.restore_state(previous)
 ```
 
-This pattern ensures operations are non-destructive and reversible — mimicking professional-grade version control for calculations.
+**Outcome:**
+Undo/Redo restores both operands and results exactly.
 
-### 🔔 Observer Pattern
+---
 
-**Purpose:** Automatically trigger log saving and CSV persistence when new operations occur.
+### 🔔 Observer Pattern — `logger.py`
 
-**Where:** `app/logger.py`
-
-**Observers:**
-
-  - `LoggingObserver`: logs every operation in `logs/app.log`
-  - `AutoSaveObserver`: saves calculation history to CSV (`history/history.csv`)
-
-**Example:**
+Observers get notified automatically when a new calculation occurs.
 
 ```python
 calc.register_observer(LoggingObserver(logger))
 calc.register_observer(AutoSaveObserver(cfg))
 ```
 
-When `calc.perform_operation("add", 2, 3)` runs, both observers react without direct coupling.
-This pattern decouples core logic from side effects (logging and persistence).
+When an operation executes:
 
-### 🧱 Decorator Pattern
+* LoggingObserver → logs to `logs/app.log`
+* AutoSaveObserver → saves to `history/history.csv`
 
-**Purpose:** Dynamically build and display the help menu.
+**Benefit:**
+Side effects are decoupled — core logic remains clean.
 
-**Where:** `app/decorators.py`
+---
 
-Each command registers itself:
+### 🧩 Decorator Pattern — `decorators.py`
+
+Used for the **Dynamic Help Menu**:
 
 ```python
 @register_command("add", "Add two numbers")
@@ -141,111 +301,33 @@ def cmd_add(calc, args):
     ...
 ```
 
-When the user types `help`, all decorated commands are dynamically listed:
+When `help` is typed, all registered commands appear automatically.
 
-```sql
-=== 🧭 Available Commands ===
-add - Add two numbers
-subtract - Subtract one number from another
-...
+---
+
+### 🎨 Color-Coded Output — `ui_style.py`
+
+Implements color feedback with **Colorama**:
+
+```python
+print(Fore.GREEN + "✅ Result: 12.0" + Style.RESET_ALL)
 ```
 
-No manual edits are needed when new commands are added — fully automatic.
-
------
-
-### 🎨 UI Enhancement: Colorized Output
-
-**Purpose:** Provide clear, visually distinct output for different message types.
-
-**Where:** `app/ui_style.py`
-
-  - ✅ Success → **Green**
-  - ⚠️ Warning → **Yellow**
-  - ❌ Error → **Red**
-  - ℹ️ Info → **Blue**
-
-This improves user interaction and mimics modern terminal UX.
-
------
-
-### 🪵 Logging and Observability
-
-**Module:** `app/logger.py`
-
-The logging system uses both `FileHandler` and `StreamHandler` (for testing under `pytest`).
-It follows a single-entry configuration pattern via `configure_logger_from_config()`.
-
-**📁 File Output:** `logs/app.log`
+Output:
 
 ```text
-2025-10-23 14:03:22 [INFO] calc: add(5.0, 7.0) = 12.0
-2025-10-23 14:03:24 [INFO] calc: abs_diff(10.0, 4.0) = 6.0
-2025-10-23 14:03:25 [INFO] calc: modulus(11.0, 4.0) = 3.0
+✅ Result: 12.0
+⚠️  Invalid input
+❌  Division by zero error
 ```
 
-#### 🧠 Key Logging Features
+---
 
-  - Timestamped entries in `YYYY-MM-DD HH:MM:SS` format
-  - Rotating handlers prevented to avoid duplicates
-  - Configurable log path via `.env`
-  - `Pytest` stream handler ensures coverage testing captures log events
-
------
-
-## 🧱 Project Architecture
-
-```bash
-enhanced-calculator/
-├── app/
-│ ├── __init__.py
-│ ├── calculation.py # Calculation entity
-│ ├── calculator.py # Core Calculator logic
-│ ├── calculator_config.py # Loads configuration (.env)
-│ ├── calculator_memento.py # Implements Memento Pattern
-│ ├── command_pattern.py # Command Pattern classes
-│ ├── commands.py # REPL command implementations
-│ ├── decorators.py # Decorator for dynamic help
-│ ├── exceptions.py # Custom exception hierarchy
-│ ├── help_menu.py # Prints dynamic command menu
-│ ├── history.py # Manages history stack
-│ ├── input_validators.py # Input validation logic
-│ ├── logger.py # Logging & Observer pattern
-│ ├── operations.py # Factory-created operations
-│ └── ui_style.py # Color-coded CLI styling
-├── tests/ # All pytest-based unit tests
-├── .github/workflows/ # GitHub Actions CI pipeline
-├── requirements.txt
-├── .env
-└── README.md
-```
-
------
-
-### 🧾 Configuration Setup (.env)
-
-**Example `.env`:**
-
-```bash
-CALCULATOR_LOG_DIR=logs
-CALCULATOR_HISTORY_DIR=history
-CALCULATOR_AUTO_SAVE=true
-CALCULATOR_PRECISION=2
-CALCULATOR_MAX_INPUT_VALUE=1000000
-CALCULATOR_DEFAULT_ENCODING=utf-8
-```
-
-Automatically loaded via `dotenv`.
-If missing, defaults are applied safely.
-
------
-
-### 🚀 Example Session (Expanded)
+## 🧮 Example Session
 
 ```text
 === 🧮 Enhanced Calculator ===
-Type 'help' to see available commands.
-Type 'exit' to quit.
+Type 'help' for commands, 'exit' to quit.
 
 >>> add 5 7
 ✅ Result: 12.0
@@ -259,9 +341,6 @@ Type 'exit' to quit.
 >>> percent 2 8
 ✅ Result: 25.0%
 
->>> divide 10 2
-✅ Result: 5.0
-
 >>> undo
 ⚠️  Undid last operation.
 
@@ -273,50 +352,100 @@ Type 'exit' to quit.
   1. add(5.0, 7.0) = 12.0
   2. abs_diff(10.0, 4.0) = 6.0
   3. modulus(11.0, 4.0) = 3.0
-  4. percent(2.0, 8.0) = 25.0
+  4. percent(2.0, 8.0) = 25.0%
 
 >>> save
 💾 History saved to history/history.csv
-
->>> exit
-👋 Goodbye! Thanks for using Enhanced Calculator.
 ```
 
------
+---
 
-## 🧪 Testing and Coverage
+## 🪵 Logging System
 
-### Running Tests
+All logs are managed through a **centralized logger** configured in `logger.py`.
+
+### 📂 Example Log (`logs/app.log`)
+
+```
+2025-10-23 15:22:00 [INFO] calc: add(5.0, 7.0) = 12.0
+2025-10-23 15:22:02 [INFO] calc: abs_diff(10.0, 4.0) = 6.0
+2025-10-23 15:22:03 [INFO] calc: modulus(11.0, 4.0) = 3.0
+```
+
+### 🔍 Features
+
+* Uses `logging.FileHandler` and optional `StreamHandler` for pytest
+* Color-coded logs for console debugging
+* Logs creation and setup handled via `.env` config
+* Follows INFO/WARNING/ERROR levels
+
+---
+
+## 💾 Serialization and Persistence
+
+### ✅ Saving History
+
+Automatically saves every calculation using pandas:
+
+```python
+def save_history_to_csv(history, path):
+    pd.DataFrame(history).to_csv(path, index=False)
+```
+
+### ✅ Loading History
+
+Reads saved CSV and reconstructs Calculation objects:
+
+```python
+def load_history_from_csv(path):
+    df = pd.read_csv(path)
+    return [Calculation(...row...) for _, row in df.iterrows()]
+```
+
+**Handles:** missing files, malformed CSVs, encoding errors.
+
+---
+
+## 🧪 Unit Testing and Coverage
+
+Run all tests:
 
 ```bash
 pytest
 ```
 
-### Checking Coverage
+Enforce coverage:
 
 ```bash
-pytest --cov=app --cov-report=term-missing
+pytest --cov=app --cov-report=term-missing --cov-fail-under=100
 ```
 
-✅ **Goal: 100% coverage** — all modules, all branches, all exceptions.
+### 🔍 Test Highlights
 
------
+* Arithmetic operation validation
+* Undo/Redo flow
+* Logger output verification
+* Input validation and error handling
+* Dynamic help decorator tests
 
-## 🔄 Continuous Integration (CI/CD)
+---
 
-GitHub Actions workflow `.github/workflows/python-app.yml` automatically:
+## ⚙️ CI/CD with GitHub Actions
 
-  - Installs dependencies
-  - Runs `pytest`
-  - Enforces 100% coverage
+The pipeline (`.github/workflows/python-app.yml`) ensures:
 
-### Workflow Example
+* Automatic testing on push and pull requests
+* Dependency installation
+* 100% coverage enforcement
 
 ```yaml
 name: Python Enhanced Calculator CI
 on:
   push:
     branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -325,134 +454,149 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install -r requirements.txt pytest pytest-cov
+      - run: |
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
       - run: pytest --cov=app --cov-fail-under=100
 ```
 
-✅ The badge in the README updates automatically when tests pass.
+A build badge can be added to your README:
 
------
+```markdown
+![Build Status](https://github.com/<username>/enhanced-calculator/actions/workflows/python-app.yml/badge.svg)
+```
+
+---
 
 ## ⚙️ Optional Features Implemented
 
-### 1️⃣ Dynamic Help Menu (Decorator Pattern)
+### 🌟 1. Dynamic Help Menu (Decorator Pattern)
 
-**Goal:** Automatically reflect all available commands in the help menu.
-
-**Implementation:**
-
-  - Each command registers with `@register_command(name, description)`
-  - The decorator stores entries in a global registry.
-  - When `help` is invoked, all commands display dynamically.
+Automatically updates when new commands are added.
+No manual editing required.
 
 **Example Output:**
 
-```text
+```
 === 🧭 Available Commands ===
-add         - Add two numbers
-subtract    - Subtract one number from another
-abs_diff    - Absolute difference between two numbers
-percent     - Percentage (a/b * 100)
-...
+add        - Add two numbers
+percent    - Calculate percentage
+modulus    - Find remainder
+root       - Find nth root
+undo       - Undo last operation
 ```
 
-**Advantage:**
-Adding new commands requires **zero updates** to the help menu.
+---
 
-### 2️⃣ Auto CSV Save (Observer Pattern)
+### 💾 2. Auto-Save Feature (Observer Pattern)
 
-**Goal:** Automatically persist calculation history after each operation.
-
-**Implementation:**
-`AutoSaveObserver` listens to calculator events:
-
-```python
-def update(self, calculation: Calculation):
-    save_history_to_csv(self.history, self.cfg.history_path)
-```
-
-**Output:**
-
-```text
-💾 Auto-saving: History updated with add(5.0, 7.0) = 12.0
-```
-
-**CSV Example:**
-
-```
-timestamp,operation,a,b,result
-2025-10-23T14:00:00,add,5.0,7.0,12.0
-```
-
-### 3️⃣ Color-Coded Logging & Console Output
-
-**Goal:** Improve user interaction with color-coded messages.
-
-**Implementation:**
-
-```python
-Fore.GREEN + "✅ Result: 12.0" + Style.RESET_ALL
-```
-
-**Effect:**
-
-  - Success messages → **Green**
-  - Warnings → **Yellow**
-  - Errors → **Red**
+The `AutoSaveObserver` watches calculator state and writes to CSV automatically after every operation.
 
 **Output Example:**
 
 ```text
-✅ Result: 25.0%
-⚠️  Invalid input, please retry.
+💾 Auto-save: add(5.0, 7.0) persisted to history/history.csv
 ```
 
------
+---
 
-## 🧑‍💻 Git and Collaboration
+### 🎨 3. Color-Coded Outputs (UI Enhancement)
 
-  - Clear, descriptive commit messages (`feat:`, `fix:`, `refactor:`)
-  - Branch-based development (`feature/memento`, `feature/logger`, etc.)
-  - Merging handled via Pull Requests after CI passes
+Using `Colorama`, results and errors are highlighted visually:
 
-**Sample Git Log:**
+* ✅ Success (Green)
+* ⚠️ Warning (Yellow)
+* ❌ Error (Red)
 
-```bash
-* 6197a3e (HEAD -> master) Implemented Color Coded Output Successfully
-* 7e9cdcb Implemented Dynamic Helper Option
-* 3132e12 Integrated dynamic help menu into CLI REPL
-* 43ab7b0 Added LoggingObserver and AutoSaveObserver
-* 62835c2 Implemented Memento pattern with undo/redo
+---
+
+### 🕹️ 4. Additional Design Pattern: Command Pattern
+
+**Purpose:**
+Encapsulate operations as objects — allowing queuing, scheduling, and parameterization.
+
+**Example:**
+
+```python
+cmd = OperationCommand(AddOperation(), 5, 3)
+queue = [cmd]
+for c in queue:
+    print(c.execute())  # 8
 ```
 
------
+**Benefit:**
+Future extensibility — e.g., batch processing or macro commands.
+
+---
+
+## 🧩 Best Practices Followed
+
+### 🧱 Modular Design
+
+Code is divided into cohesive, testable modules.
+Each file handles a single responsibility.
+
+### 🔁 DRY Principle
+
+Repeated validation, formatting, and persistence logic is centralized — no duplication.
+
+### 🪵 Comprehensive Logging
+
+All calculations and errors are recorded using the `Logger` class.
+No silent failures — every event leaves a trace.
+
+### 🧪 Continuous Testing
+
+Every module has direct and integration tests ensuring robust error handling.
+
+---
+
+## 🧑‍💻 Git Usage and Commit History
+
+* Clear, descriptive commit messages:
+
+  ```
+  feat: add observer pattern for auto-save
+  fix: handle divide by zero in operations.py
+  refactor: improve command registration decorator
+  ```
+* Feature branches used for modular development:
+
+  ```
+  git checkout -b feature/logger
+  git push origin feature/logger
+  ```
+* Commits reflect actual progress — ensuring full academic integrity.
+
+---
 
 ## 🏁 Conclusion
 
-This **Enhanced Calculator** project reflects an end-to-end understanding of real-world software design, combining:
+The **Enhanced Calculator** project integrates multiple design patterns, follows DRY and modular best practices, and includes robust logging, configuration, and automated testing.
 
-  - Design patterns
-  - Clean architecture
-  - Continuous integration
-  - Logging and persistence
-  - Extensible CLI interface
+It represents a **production-ready architecture** emphasizing:
 
-With **100% code coverage** and **CI/CD integration**, it represents a professional-quality Python application demonstrating true mastery of modular design and maintainability.
+* Extensibility
+* Maintainability
+* Test coverage
+* Continuous integration
 
-> “Clean code and modular design are not the end — they’re the beginning of scalable innovation.”
+> *“Code is only as good as its structure — and structure comes from design.”*
 > — Rajat Pednekar
 
------
+---
 
 ## 🏗️ Future Enhancements
 
-  - GUI interface using PyQt or Tkinter
-  - REST API integration with FastAPI
-  - Database persistence (SQLite/PostgreSQL)
-  - Voice or speech command input
-  - Math expression parser for multi-operation chaining
-
-<!-- end list -->
+* REST API interface using **FastAPI**
+* GUI interface using **Tkinter** or **PyQt**
+* Batch command support (using Command Pattern queue)
+* Cloud logging or database persistence
+* Advanced mathematical expression parsing
 
 ```
+
+---
+
+Would you like me to now generate a **short 400-word GitHub summary (repository front-page version)** optimized for recruiters and professors (concise but impactful)?
 ```
