@@ -114,15 +114,30 @@ pandas
 
 ## 🧾 Configuration Setup (`.env`)
 
+Below is the list of environment variables used to configure the Enhanced Calculator.  
+These variables should be placed in a `.env` file located at the project root directory.
+
+| Variable | Description | Example |
+|-----------|--------------|----------|
+| `CALCULATOR_LOG_DIR` | Directory where logs are stored | `logs` |
+| `CALCULATOR_HISTORY_DIR` | Directory for saved history CSVs | `history` |
+| `CALCULATOR_AUTO_SAVE` | Automatically save after each calculation | `true` |
+| `CALCULATOR_PRECISION` | Decimal places for rounding | `2` |
+| `CALCULATOR_MAX_INPUT_VALUE` | Maximum allowed numeric input | `1000000` |
+| `CALCULATOR_MAX_HISTORY_SIZE` | Maximum number of history records retained | `50` |
+| `CALCULATOR_DEFAULT_ENCODING` | Default encoding for CSV and log files | `utf-8` |
+
+### 💡 Example `.env` File
+
 ```bash
+# Calculator Configuration
 CALCULATOR_LOG_DIR=logs
 CALCULATOR_HISTORY_DIR=history
-CALCULATOR_MAX_HISTORY_SIZE=50
 CALCULATOR_AUTO_SAVE=true
 CALCULATOR_PRECISION=2
 CALCULATOR_MAX_INPUT_VALUE=1000000
+CALCULATOR_MAX_HISTORY_SIZE=50
 CALCULATOR_DEFAULT_ENCODING=utf-8
-```
 
 * Uses **python-dotenv** for loading.
 * Default values are applied automatically if any field is missing.
