@@ -26,6 +26,8 @@ The following table maps each design pattern to its location and purpose in the 
 | **Command** | `app/command_pattern.py` | Encapsulates calculator commands (add, subtract, undo, redo, etc.) as objects. |
 | **Decorator** | `app/decorator.py` + `app/help_menu.py` | Dynamically builds the help menu so new operations appear automatically. |
 | **Facade** | `app/calculator.py` | Provides a unified high-level interface coordinating all subsystems. |
+
+
 ---
 
 ## 🏗️ Repository Structure
