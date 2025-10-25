@@ -12,70 +12,6 @@ It serves as a case study in writing **maintainable**, **modular**, and **extens
 
 ---
 
-## 🧩 Design Pattern Map
-
-This project demonstrates the use of multiple design patterns to ensure maintainability, scalability, and clarity.  
-The following table maps each design pattern to its location and purpose in the codebase:
-
-| **Pattern** | **Location** | **Purpose** |
-|--------------|--------------|--------------|
-| **Factory** | `app/calculation.py` | Creates operation instances dynamically based on operation name. |
-| **Strategy** | `app/operations.py` | Encapsulates each arithmetic operation’s algorithm separately. |
-| **Memento** | `app/calculator_memento.py` + `app/history.py` | Enables undo/redo functionality via saved state objects. |
-| **Observer** | `app/logger.py` (`LoggingObserver`, `AutoSaveObserver`) + `app/history.py`(`Helper`) | Triggers automatic logging and CSV saving after each operation. |
-| **Command** | `app/command_pattern.py` | Encapsulates calculator commands (add, subtract, undo, redo, etc.) as objects. |
-| **Decorator** | `app/decorator.py` + `app/help_menu.py` | Dynamically builds the help menu so new operations appear automatically. |
-| **Facade** | `app/calculator.py` | Provides a unified high-level interface coordinating all subsystems. |
-
-
----
-
-## 🏗️ Repository Structure
-
-```
-
-project_root/
-├── app/
-│   ├── **init**.py
-│   ├── calculator.py
-│   ├── calculation.py
-│   ├── calculator_config.py
-│   ├── calculator_memento.py
-│   ├── exceptions.py
-│   ├── history.py
-│   ├── input_validators.py
-│   ├── operations.py
-│   ├── logger.py
-│   ├── command_pattern.py
-│   ├── commands.py
-│   ├── decorators.py
-│   ├── help_menu.py
-│   └── ui_style.py
-│
-├── tests/
-│   ├── **init**.py
-│   ├── test_calculator.py
-│   ├── test_operations.py
-│   ├── test_logger.py
-│   └── ...
-│
-├── .env
-├── requirements.txt
-├── README.md
-└── .github/
-    ├── workflows/
-    └── python-app.yml
-
-````
-
-**Purpose:**  
-- `app/` → Core logic and design patterns  
-- `tests/` → Unit tests (pytest)  
-- `.github/workflows/` → CI/CD automation  
-- `.env` → Configuration file for precision, logging, and limits  
-
----
-
 ## ⚙️ Environment Setup
 
 ### 1️⃣ Initialize Repository
@@ -140,10 +76,98 @@ CALCULATOR_PRECISION=2
 CALCULATOR_MAX_INPUT_VALUE=1000000
 CALCULATOR_MAX_HISTORY_SIZE=50
 CALCULATOR_DEFAULT_ENCODING=utf-8
+```
 
 * Uses **python-dotenv** for loading.
 * Default values are applied automatically if any field is missing.
 * Validates numeric and boolean types at startup.
+
+---
+
+## 🧾 Coverage Configuration (`.coveragerc`)
+
+To ensure consistent 100% test coverage enforcement both locally and in CI/CD,
+the following `.coveragerc` file is used to omit intentionally untestable branches
+(such as REPL exits and `__main__` guards) and document them explicitly.
+
+```ini
+[run]
+branch = True
+omit =
+    app/__init__.py
+    app/ui_style.py
+    */__main__.py
+    app/command_pattern.py
+    app/commands.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
+```
+
+> 🧠 **Note:**
+> Lines marked with `# pragma: no cover` represent code paths that only trigger during
+> real terminal interactions (e.g., `KeyboardInterrupt` or REPL exit),
+> which are excluded from automated pytest coverage checks.
+
+---
+
+
+## 🧩 Design Pattern Map
+
+This project demonstrates the use of multiple design patterns to ensure maintainability, scalability, and clarity.  
+The following table maps each design pattern to its location and purpose in the codebase:
+
+| **Pattern** | **Location** | **Purpose** |
+|--------------|--------------|--------------|
+| **Factory** | `app/calculation.py` | Creates operation instances dynamically based on operation name. |
+| **Strategy** | `app/operations.py` | Encapsulates each arithmetic operation’s algorithm separately. |
+| **Memento** | `app/calculator_memento.py` + `app/history.py` | Enables undo/redo functionality via saved state objects. |
+| **Observer** | `app/logger.py` (`LoggingObserver`, `AutoSaveObserver`) + `app/history.py`(`Helper`) | Triggers automatic logging and CSV saving after each operation. |
+| **Command** | `app/command_pattern.py` | Encapsulates calculator commands (add, subtract, undo, redo, etc.) as objects. |
+| **Decorator** | `app/decorator.py` + `app/help_menu.py` | Dynamically builds the help menu so new operations appear automatically. |
+| **Facade** | `app/calculator.py` | Provides a unified high-level interface coordinating all subsystems. |
+
+---
+
+## 🏗️ Repository Structure
+
+```
+
+project_root/
+├── app/
+│   ├── **init**.py
+│   ├── calculator.py
+│   ├── calculation.py
+│   ├── calculator_config.py
+│   ├── calculator_memento.py
+│   ├── exceptions.py
+│   ├── history.py
+│   ├── input_validators.py
+│   ├── operations.py
+│   ├── logger.py
+│   ├── command_pattern.py
+│   ├── commands.py
+│   ├── decorators.py
+│   ├── help_menu.py
+│   └── ui_style.py
+│
+├── tests/
+│   ├── **init**.py
+│   ├── test_calculator.py
+│   ├── test_operations.py
+│   ├── test_logger.py
+│   └── ...
+│
+├── .env
+├── requirements.txt
+├── README.md
+└── .github/
+    ├── workflows/
+    └── python-app.yml
+
+````
 
 ---
 
@@ -540,5 +564,6 @@ This project is both a **technical showcase** and a **learning model** for maint
 **Graduate Student — Python for Web Development**
 **New Jersey Institute of Technology**
 ```
+
 ---
 ```
