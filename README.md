@@ -563,7 +563,3 @@ This project is both a **technical showcase** and a **learning model** for maint
 **Rajat Pednekar**
 **Graduate Student — Python for Web Development**
 **New Jersey Institute of Technology**
-```
-
----
-```
