@@ -12,6 +12,9 @@ from app.input_validators import validate_inputs
 from app.operations import OperationFactory
 from app.exceptions import OperationError, ValidationError
 from app.exceptions import HistoryError
+import pandas as pd
+from app.logger import load_history_from_csv
+
 
 
 def make_calc(i=1):
@@ -976,3 +979,31 @@ def test_root_zero_degree_guard():
     r = Root()
     with pytest.raises(OperationError):
         r(9, 0)  # b = 0 triggers "Root with zero degree is undefined."
+
+def test_undo_redo_logging(monkeypatch, caplog):
+    from app.calculator import Calculator
+    from app.history import History
+    from app.calculator_memento import Caretaker
+    from app.logger import configure_logger_from_config, LoggingObserver
+    from app.calculator_config import load_config
+
+    cfg = load_config()
+    logger = configure_logger_from_config(cfg)
+    calc = Calculator(History(), Caretaker(), config=cfg)
+    calc.register_observer(LoggingObserver(logger))
+
+    # Undo/Redo on empty history should raise HistoryError and log warning
+    with caplog.at_level("WARNING"):
+        with pytest.raises(Exception):
+            calc.undo()
+        with pytest.raises(Exception):
+            calc.redo()
+
+    assert any("Undo failed" in r.message for r in caplog.records)
+    assert any("Redo failed" in r.message for r in caplog.records)
+
+def test_load_history_malformed_csv(tmp_path):
+    bad_csv = tmp_path / "bad.csv"
+    pd.DataFrame({"operation": ["add"], "a": ["x"], "b": [2], "result": [4]}).to_csv(bad_csv, index=False)
+    with pytest.raises(ValueError):
+        load_history_from_csv(bad_csv)

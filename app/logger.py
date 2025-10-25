@@ -77,8 +77,10 @@ def configure_logger_from_config(cfg: CalculatorConfig) -> logging.Logger:
         logger.addHandler(sh)
         logger._pytest_stream = log_stream  # store reference (optional for debugging)
 
-    logger.info("🟢 Logger initialized successfully.")
-    logger.info(f"Log file path: {cfg.log_path}")
+    if not getattr(logger, "_initialized", False):
+        logger.info("🟢 Logger initialized successfully.")
+        logger.info(f"Log file path: {cfg.log_path}")
+        logger._initialized = True
 
     # ✅ During pytest, allow propagation so caplog can capture it
     if "PYTEST_CURRENT_TEST" in os.environ:
@@ -114,6 +116,10 @@ def load_history_from_csv(csv_path: Path) -> List[Calculation]:
     if not csv_path.exists():
         return []
     df = pd.read_csv(csv_path)
+    required_cols = {"operation", "a", "b", "result", "timestamp"}
+    if not required_cols.issubset(df.columns):
+        raise ValueError(f"Malformed CSV — missing columns: {required_cols - set(df.columns)}") 
+        
     out: List[Calculation] = []
     for _, row in df.iterrows():
         out.append(
@@ -133,20 +139,18 @@ def load_history_from_csv(csv_path: Path) -> List[Calculation]:
 # -----------------------------
 class LoggingObserver:
     """Observer that logs each calculation to app log."""
-
     def __init__(self, logger: logging.Logger):
         self._logger = logger
 
     def update(self, calculation: Calculation) -> None:
-        """Log calculation details when triggered by Calculator."""
-        self._logger.info(
-            "calc: %s(%s, %s) = %s",
-            calculation.operation,
-            calculation.a,
-            calculation.b,
-            calculation.result,
-        )
-
+        try:
+            self._logger.info(
+                "calc: %s(%s, %s) = %s",
+                calculation.operation, calculation.a, calculation.b, calculation.result,
+            )
+        except Exception as e: # pragma: no cover
+            self._logger.error("❌ Logging failed for %s: %s", calculation.operation, e)
+            
 
 class AutoSaveObserver:
     """Observer that writes entire history to CSV after each calculation."""
@@ -161,3 +165,4 @@ class AutoSaveObserver:
             self._cfg.history_path,
             encoding=self._cfg.default_encoding,
         )
+

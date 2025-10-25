@@ -57,3 +57,4 @@ def test_validate_overflow_max_input():
 def test_validate_zero_root():
     with pytest.raises(OperationError):
         validate_inputs("root", 4, 0, 1_000_000)
+

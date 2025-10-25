@@ -40,6 +40,11 @@ def _parse_two_numbers(args):
     except ValueError:
         raise ValidationError("Both operands must be numbers.")
 
+def _get_logger_from_calc(calc):
+    for obs in getattr(calc, "observers", []):
+        if hasattr(obs, "_logger"):
+            return obs._logger
+    return None
 
 # ---------------------------
 # Arithmetic Commands (Command Pattern)
@@ -208,3 +213,29 @@ def cmd_exit(calc, args):
     logger.info("👋 User exited the calculator gracefully.")
     logger.info("=== Session Ended ===")
     exit(0)
+
+@register_command("save", "Manually save calculation history to CSV")
+def cmd_save(calc, args):
+    log = _get_logger_from_calc(calc)
+    try:
+        calc.history.save_to_csv(calc.config.history_path, calc.config.default_encoding)
+        print(UI.INFO + f"{UI.ICONS['save']} History saved to {calc.config.history_path}" + UI.RESET)
+        if log:
+            log.info("💾 History saved to %s", calc.config.history_path)
+    except HistoryError as e:
+        print(UI.ERROR + f"{UI.ICONS['error']} {e}" + UI.RESET)
+        if log:
+            log.error("❌ History save failed: %s", e)
+
+@register_command("load", "Load calculation history from CSV")
+def cmd_load(calc, args):
+    log = _get_logger_from_calc(calc)
+    try:
+        calc.history.load_from_csv(calc.config.history_path, calc.config.default_encoding)
+        print(UI.INFO + f"{UI.ICONS['load']} History loaded from {calc.config.history_path}" + UI.RESET)
+        if log:
+            log.info("📥 History loaded from %s", calc.config.history_path)
+    except HistoryError as e:
+        print(UI.ERROR + f"{UI.ICONS['error']} {e}" + UI.RESET)
+        if log:
+            log.error("❌ History load failed: %s", e)

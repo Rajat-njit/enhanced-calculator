@@ -88,7 +88,11 @@ class Calculator:
             self._notify_observers(calc)
             return calc.result
         except (OperationError, ValidationError) as e:
-            raise e
+            log = self._get_logger()
+            if log:
+                log.error("❌ Operation failed: %s(%r, %r) | %s", # pragma: no cover
+                        operation_name, a, b, e)
+            raise
 
     # -------------------------
     # History Manipulation
@@ -106,7 +110,9 @@ class Calculator:
         self.history.clear()
         self.caretaker.clear()
         self.history.attach_caretaker(self.caretaker)
-
+        log = self._get_logger()
+        if log:
+            log.info("🧹 History cleared by user.") # pragma: no cover
     # -------------------------
     # Undo/Redo Commands
     # -------------------------
@@ -115,12 +121,31 @@ class Calculator:
         """Restores the previous calculation state."""
         try:
             self.history.undo()
+            log = self._get_logger()
+            if log:
+                log.info("↩️  Undo applied.") # pragma: no cover
         except HistoryError as e:
+            log = self._get_logger()
+            if log:
+                log.warning("⚠️  Undo failed: %s", e)
             raise HistoryError(f"Undo failed: {e}")
 
     def redo(self):
         """Restores the next calculation state."""
         try:
             self.history.redo()
+            log = self._get_logger()
+            if log:
+                log.info("↪️  Redo applied.") # pragma: no cover
         except HistoryError as e:
+            log = self._get_logger()
+            if log:
+                log.warning("⚠️  Redo failed: %s", e)
             raise HistoryError(f"Redo failed: {e}")
+
+    def _get_logger(self):
+        """Return the LoggingObserver's logger if present, else None."""
+        for obs in self.observers:
+            if hasattr(obs, "_logger"):
+                return obs._logger
+        return None
