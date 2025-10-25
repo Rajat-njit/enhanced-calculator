@@ -23,6 +23,21 @@ It serves as a case study in writing **maintainable**, **modular**, and **extens
 | **Decorator** | Dynamically generates the help menu | `decorators.py` |
 | **Singleton (Logger)** | Ensures single global logger instance | `logger.py` |
 
+
+## 🧩 Design Pattern Map
+
+This project demonstrates the use of multiple design patterns to ensure maintainability, scalability, and clarity.  
+The following table maps each design pattern to its location and purpose in the codebase:
+
+| **Pattern** | **Location** | **Purpose** |
+|--------------|--------------|--------------|
+| **Factory** | `app/calculation.py` | Creates operation instances dynamically based on operation name. |
+| **Strategy** | `app/operations.py` | Encapsulates each arithmetic operation’s algorithm separately. |
+| **Memento** | `app/calculator_memento.py` + `app/history.py` | Enables undo/redo functionality via saved state objects. |
+| **Observer** | `app/logger.py` (`LoggingObserver`, `AutoSaveObserver`) | Triggers automatic logging and CSV saving after each operation. |
+| **Command** | `app/command_pattern.py` | Encapsulates calculator commands (add, subtract, undo, redo, etc.) as objects. |
+| **Decorator** | `app/help_menu.py` | Dynamically builds the help menu so new operations appear automatically. |
+| **Facade** | `app/calculator.py` | Provides a unified high-level interface coordinating all subsystems. |
 ---
 
 ## 🏗️ Repository Structure
